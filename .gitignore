@@ -1,0 +1,18 @@
+# dependências
+node_modules/
+
+# configuração local de ferramentas
+.claude/
+.vscode/
+.idea/
+
+# sistema
+Thumbs.db
+Desktop.ini
+desktop.ini
+.DS_Store
+
+# logs e temporários
+*.log
+*.bak
+*.tmp

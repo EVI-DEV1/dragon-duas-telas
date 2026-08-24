@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cyan: #00f5ff;
+            --blue: #2477ff;
+            --purple: #8b5cf6;
+            --dark: #03050c;
+            --card: rgba(7, 10, 20, .82);
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--dark);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            color: white;
+        }
+
+        /* =========================
+           CENA
+        ========================= */
+
+        .scene {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 50% 50%,
+                    rgba(0, 245, 255, .10),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 20% 80%,
+                    rgba(139, 92, 246, .14),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #02030a,
+                    #060b18,
+                    #02030a
+                );
+        }
+
+        /* =========================
+           LUZES
+        ========================= */
+
+        .glow {
+            position: absolute;
+
+            width: 500px;
+            height: 500px;
+
+            border-radius: 50%;
+
+            filter: blur(100px);
+
+            opacity: .18;
+
+            pointer-events: none;
+        }
+
+        .glow.one {
+            background: var(--cyan);
+            left: -180px;
+            top: 20%;
+
+            animation:
+                floatGlow 8s ease-in-out infinite;
+        }
+
+        .glow.two {
+            background: var(--purple);
+            right: -180px;
+            bottom: -100px;
+
+            animation:
+                floatGlow 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatGlow {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(80px, -50px);
+            }
+        }
+
+        /* =========================
+           PARTICULAS
+        ========================= */
+
+        #particles {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            z-index: 1;
+
+            pointer-events: none;
+        }
+
+        /* =========================
+           TELA INICIAL
+        ========================= */
+
+        .intro {
+            position: absolute;
+            inset: 0;
+
+            z-index: 8;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            pointer-events: auto;
+
+            transition:
+                opacity 1s ease,
+                transform 1.2s cubic-bezier(.2,.8,.2,1);
+        }
+
+        .intro.hidden {
+            opacity: 0;
+
+            transform:
+                scale(1.15);
+
+            pointer-events: none;
+        }
+
+        .title {
+            font-size:
+                clamp(2rem, 6vw, 5rem);
+
+            font-weight: 800;
+
+            letter-spacing: .18em;
+
+            text-transform: uppercase;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ffffff,
+                    var(--cyan),
+                    #ffffff,
+                    var(--purple),
+                    #ffffff
+                );
+
+            background-size: 300%;
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+
+            animation:
+                titleGradient 5s linear infinite,
+                titleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes titleGradient {
+
+            from {
+                background-position: 0%;
+            }
+
+            to {
+                background-position: 300%;
+            }
+        }
+
+        @keyframes titleFloat {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .subtitle {
+            margin-top: 18px;
+
+            color:
+                rgba(255,255,255,.58);
+
+            letter-spacing: .35em;
+
+            text-transform: uppercase;
+
+            font-size: 11px;
+        }
+
+        /* =========================
+           BOTÃO INICIAL
+        ========================= */
+
+        .enter {
+            position: relative;
+
+            margin-top: 42px;
+
+            padding: 15px 36px;
+
+            border: 1px solid
+                rgba(0,245,255,.6);
+
+            border-radius: 50px;
+
+            color: white;
+
+            background:
+                rgba(0,245,255,.06);
+
+            backdrop-filter: blur(10px);
+
+            letter-spacing: .2em;
+
+            text-transform: uppercase;
+
+            font-size: 11px;
+
+            cursor: pointer;
+
+            transition: .3s;
+
+            box-shadow:
+                0 0 20px
+                rgba(0,245,255,.08);
+        }
+
+        .enter:hover {
+            background:
+                rgba(0,245,255,.16);
+
+            box-shadow:
+                0 0 35px
+                rgba(0,245,255,.35);
+
+            transform:
+                translateY(-3px)
+                scale(1.03);
+        }
+
+        .enter:active {
+            transform:
+                translateY(0)
+                scale(.97);
+        }
+
+        /* =========================
+           DRAGÃO
+        ========================= */
+
+        #dragon {
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            z-index: 4;
+
+            pointer-events: none;
+
+            opacity: 1;
+
+            transition:
+                transform 1.8s cubic-bezier(.15,.8,.2,1),
+                opacity 1s ease,
+                filter 1s ease;
+        }
+
+        /* =========================
+           LOGIN
+        ========================= */
+
+        .login-screen {
+            position: absolute;
+
+            inset: 0;
+
+            z-index: 10;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            transform:
+                scale(.92)
+                translateY(20px);
+
+            transition:
+                opacity 1s ease,
+                transform 1.2s cubic-bezier(.2,.8,.2,1),
+                visibility 1s;
+        }
+
+        .login-screen.active {
+            opacity: 1;
+
+            visibility: visible;
+
+            transform:
+                scale(1)
+                translateY(0);
+        }
+
+        .login-card {
+            position: relative;
+
+            width:
+                min(400px, calc(100% - 40px));
+
+            padding: 45px 38px;
+
+            background:
+                var(--card);
+
+            border:
+                1px solid
+                rgba(0,245,255,.18);
+
+            border-radius: 24px;
+
+            backdrop-filter: blur(25px);
+
+            box-shadow:
+                0 30px 100px
+                rgba(0,0,0,.7),
+
+                0 0 60px
+                rgba(0,245,255,.08);
+
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 220px;
+            height: 220px;
+
+            top: -130px;
+            right: -100px;
+
+            border-radius: 50%;
+
+            background:
+                var(--cyan);
+
+            filter: blur(100px);
+
+            opacity: .15;
+
+            pointer-events: none;
+        }
+
+        .login-card h2 {
+            text-align: center;
+
+            font-size: 30px;
+
+            letter-spacing: .08em;
+
+            margin-bottom: 8px;
+        }
+
+        .login-card p {
+            text-align: center;
+
+            color:
+                rgba(255,255,255,.45);
+
+            font-size: 12px;
+
+            margin-bottom: 35px;
+        }
+
+        /* =========================
+           INPUTS
+        ========================= */
+
+        .input {
+            position: relative;
+
+            margin-bottom: 25px;
+        }
+
+        .input input {
+            width: 100%;
+
+            padding: 17px 16px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.1);
+
+            outline: none;
+
+            background:
+                rgba(255,255,255,.035);
+
+            color: white;
+
+            font-size: 14px;
+
+            transition: .3s;
+        }
+
+        .input label {
+            position: absolute;
+
+            left: 16px;
+            top: 17px;
+
+            color:
+                rgba(255,255,255,.38);
+
+            font-size: 13px;
+
+            pointer-events: none;
+
+            transition: .3s;
+        }
+
+        .input input:focus,
+        .input input:valid {
+            border-color:
+                rgba(0,245,255,.6);
+
+            box-shadow:
+                0 0 20px
+                rgba(0,245,255,.08);
+        }
+
+        .input input:focus + label,
+        .input input:valid + label {
+            top: -8px;
+
+            left: 12px;
+
+            padding:
+                0 7px;
+
+            background:
+                #080c17;
+
+            color:
+                var(--cyan);
+
+            font-size: 10px;
+        }
+
+        /* =========================
+           OPÇÕES
+        ========================= */
+
+        .options {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-bottom: 25px;
+
+            font-size: 11px;
+
+            color:
+                rgba(255,255,255,.45);
+        }
+
+        .options span {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+        }
+
+        .options input {
+            accent-color:
+                var(--cyan);
+        }
+
+        .options a {
+            color:
+                var(--cyan);
+
+            text-decoration: none;
+        }
+
+        /* =========================
+           BOTÃO LOGIN
+        ========================= */
+
+        .login-btn {
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--cyan),
+                    var(--blue)
+                );
+
+            color:
+                #02050a;
+
+            font-weight: 800;
+
+            letter-spacing: .15em;
+
+            text-transform: uppercase;
+
+            cursor: pointer;
+
+            transition: .3s;
+
+            box-shadow:
+                0 0 30px
+                rgba(0,245,255,.15);
+        }
+
+        .login-btn:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 0 40px
+                rgba(0,245,255,.35);
+        }
+
+        .login-btn:active {
+            transform:
+                translateY(0)
+                scale(.98);
+        }
+
+        /* =========================
+           VOLTAR
+        ========================= */
+
+        .back {
+            display: block;
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color:
+                rgba(255,255,255,.35);
+
+            font-size: 11px;
+
+            cursor: pointer;
+
+            transition: .3s;
+        }
+
+        .back:hover {
+            color:
+                var(--cyan);
+        }
+
+        /* =========================
+           FLASH
+        ========================= */
+
+        .flash {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 20;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(0,245,255,.85),
+                    transparent 55%
+                );
+
+            opacity: 0;
+
+            pointer-events: none;
+        }
+
+        .flash.active {
+            animation:
+                flashAnimation 1.5s ease;
+        }
+
+        @keyframes flashAnimation {
+
+            0% {
+                opacity: 0;
+            }
+
+            30% {
+                opacity: .55;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .subtitle {
+                font-size: 8px;
+
+                letter-spacing: .22em;
+            }
+
+            .login-card {
+                padding:
+                    35px 25px;
+            }
+
+            .login-card h2 {
+                font-size: 25px;
+            }
+
+            .options {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="scene">
+
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+
+    <canvas id="particles"></canvas>
+
+    <!-- =========================
+         TELA INICIAL
+    ========================== -->
+
+    <section
+        class="intro"
+        id="intro"
+    >
+
+        <h1 class="title">
+            DRAGON
+        </h1>
+
+        <div class="subtitle">
+            Enter the world
+        </div>
+
+        <button
+            class="enter"
+            id="enterButton"
+            type="button"
+        >
+            Entrar
+        </button>
+
+    </section>
+
+
+    <!-- =========================
+         DRAGÃO
+    ========================== -->
+
+    <canvas id="dragon"></canvas>
+
+
+    <!-- =========================
+         LOGIN
+    ========================== -->
+
+    <section
+        class="login-screen"
+        id="login"
+    >
+
+        <div class="login-card">
+
+            <h2>
+                Bem-vindo
+            </h2>
+
+            <p>
+                Entre para acessar sua conta
+            </p>
+
+            <form id="loginForm">
+
+                <div class="input">
+
+                    <input
+                        type="text"
+                        id="username"
+                        required
+                        autocomplete="username"
+                    >
+
+                    <label for="username">
+                        Usuário
+                    </label>
+
+                </div>
+
+
+                <div class="input">
+
+                    <input
+                        type="password"
+                        id="password"
+                        required
+                        autocomplete="current-password"
+                    >
+
+                    <label for="password">
+                        Senha
+                    </label>
+
+                </div>
+
+
+                <div class="options">
+
+                    <span>
+                        <input
+                            type="checkbox"
+                            id="remember"
+                        >
+
+                        <label for="remember">
+                            Lembrar-me
+                        </label>
+                    </span>
+
+                    <a href="#">
+                        Esqueceu a senha?
+                    </a>
+
+                </div>
+
+
+                <button
+                    class="login-btn"
+                    type="submit"
+                >
+                    Entrar
+                </button>
+
+            </form>
+
+
+            <span
+                class="back"
+                id="backButton"
+            >
+                ← Voltar para o dragão
+            </span>
+
+        </div>
+
+    </section>
+
+</div>
+
+<div
+    class="flash"
+    id="flash"
+></div>
+
+
+<script>
+
+/* =====================================================
+   PARTÍCULAS
+===================================================== */
+
+const particleCanvas =
+    document.getElementById("particles");
+
+const particleCtx =
+    particleCanvas.getContext("2d");
+
+let particles = [];
+
+
+function resizeParticles() {
+
+    particleCanvas.width =
+        window.innerWidth;
+
+    particleCanvas.height =
+        window.innerHeight;
+}
+
+
+resizeParticles();
+
+
+window.addEventListener(
+    "resize",
+    resizeParticles
+);
+
+
+for (let i = 0; i < 110; i++) {
+
+    particles.push({
+
+        x:
+            Math.random() *
+            window.innerWidth,
+
+        y:
+            Math.random() *
+            window.innerHeight,
+
+        size:
+            Math.random() * 2 + .5,
+
+        speed:
+            Math.random() * .4 + .1,
+
+        alpha:
+            Math.random() * .6 + .1
+    });
+}
+
+
+function animateParticles() {
+
+    particleCtx.clearRect(
+        0,
+        0,
+        particleCanvas.width,
+        particleCanvas.height
+    );
+
+
+    particles.forEach(p => {
+
+        p.y -= p.speed;
+
+
+        if (p.y < 0) {
+
+            p.y =
+                particleCanvas.height;
+
+            p.x =
+                Math.random() *
+                particleCanvas.width;
+        }
+
+
+        particleCtx.beginPath();
+
+
+        particleCtx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI * 2
+        );
+
+
+        particleCtx.fillStyle =
+            `rgba(0,245,255,${p.alpha})`;
+
+
+        particleCtx.fill();
+    });
+
+
+    requestAnimationFrame(
+        animateParticles
+    );
+}
+
+
+animateParticles();
+
+
+/* =====================================================
+   DRAGÃO
+===================================================== */
+
+const dragonCanvas =
+    document.getElementById("dragon");
+
+const ctx =
+    dragonCanvas.getContext("2d");
+
+let W;
+let H;
+
+
+function resizeDragon() {
+
+    W =
+        dragonCanvas.width =
+        window.innerWidth;
+
+    H =
+        dragonCanvas.height =
+        window.innerHeight;
+}
+
+
+resizeDragon();
+
+
+window.addEventListener(
+    "resize",
+    resizeDragon
+);
+
+
+/* =========================
+   CORPO
+========================= */
+
+const body = [];
+
+const segments = 75;
+
+
+for (
+    let i = 0;
+    i < segments;
+    i++
+) {
+
+    body.push({
+
+        x:
+            window.innerWidth / 2 -
+            i * 9,
+
+        y:
+            window.innerHeight / 2,
+
+        size:
+            Math.max(
+                2,
+                18 - i * .22
+            ),
+
+        angle: 0
+    });
+}
+
+
+/* =========================
+   MOUSE
+========================= */
+
+let mouseX =
+    window.innerWidth / 2;
+
+let mouseY =
+    window.innerHeight / 2;
+
+
+window.addEventListener(
+    "mousemove",
+    event => {
+
+        mouseX =
+            event.clientX;
+
+        mouseY =
+            event.clientY;
+    }
+);
+
+
+/* =========================
+   ATUALIZA DRAGÃO
+========================= */
+
+function updateDragon() {
+
+    const head =
+        body[0];
+
+
+    head.x +=
+        (mouseX - head.x) *
+        .025;
+
+
+    head.y +=
+        (mouseY - head.y) *
+        .025;
+
+
+    for (
+        let i = 1;
+        i < body.length;
+        i++
+    ) {
+
+        const current =
+            body[i];
+
+        const previous =
+            body[i - 1];
+
+
+        const dx =
+            previous.x -
+            current.x;
+
+        const dy =
+            previous.y -
+            current.y;
+
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        const desired =
+            8;
+
+
+        if (
+            distance >
+            desired
+        ) {
+
+            const force =
+                (distance - desired) *
+                .2;
+
+
+            current.x +=
+                (dx / distance) *
+                force;
+
+
+            current.y +=
+                (dy / distance) *
+                force;
+        }
+
+
+        current.y +=
+            Math.sin(
+                Date.now() * .003 +
+                i * .35
+            ) * .35;
+
+
+        current.angle =
+            Math.atan2(
+                dy,
+                dx
+            );
+    }
+}
+
+
+/* =========================
+   CORPO
+========================= */
+
+function drawDragonBody() {
+
+    ctx.lineWidth = 1.5;
+
+
+    for (
+        let i = body.length - 1;
+        i >= 1;
+        i--
+    ) {
+
+        const s =
+            body[i];
+
+
+        ctx.save();
+
+
+        ctx.translate(
+            s.x,
+            s.y
+        );
+
+
+        ctx.rotate(
+            s.angle
+        );
+
+
+        ctx.shadowBlur =
+            12;
+
+
+        ctx.shadowColor =
+            "rgba(0,245,255,.8)";
+
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            -s.size,
+            0
+        );
+
+
+        ctx.lineTo(
+            0,
+            -s.size * .8
+        );
+
+
+        ctx.lineTo(
+            s.size,
+            0
+        );
+
+
+        ctx.lineTo(
+            0,
+            s.size * .8
+        );
+
+
+        ctx.closePath();
+
+
+        ctx.fillStyle =
+            "rgba(8,30,42,.9)";
+
+
+        ctx.fill();
+
+
+        ctx.strokeStyle =
+            "rgba(0,245,255,.65)";
+
+
+        ctx.stroke();
+
+
+        /* ESPINHOS */
+
+        if (i % 3 === 0) {
+
+            ctx.beginPath();
+
+
+            ctx.moveTo(
+                -s.size * .3,
+                -s.size * .5
+            );
+
+
+            ctx.lineTo(
+                -s.size * .1,
+                -s.size * 2
+            );
+
+
+            ctx.lineTo(
+                s.size * .5,
+                -s.size * .4
+            );
+
+
+            ctx.closePath();
+
+
+            ctx.fillStyle =
+                "#07121c";
+
+
+            ctx.fill();
+
+
+            ctx.stroke();
+        }
+
+
+        ctx.restore();
+    }
+}
+
+
+/* =========================
+   ASAS
+========================= */
+
+function drawWing(segment) {
+
+    const s =
+        body[segment];
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        s.x,
+        s.y
+    );
+
+
+    ctx.rotate(
+        s.angle
+    );
+
+
+    ctx.strokeStyle =
+        "rgba(0,245,255,.65)";
+
+
+    ctx.fillStyle =
+        "rgba(0,100,140,.08)";
+
+
+    ctx.lineWidth = 2;
+
+
+    for (
+        const side of [-1, 1]
+    ) {
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            0,
+            0
+        );
+
+
+        ctx.lineTo(
+            35,
+            side * 55
+        );
+
+
+        ctx.lineTo(
+            85,
+            side * 90
+        );
+
+
+        ctx.lineTo(
+            65,
+            side * 35
+        );
+
+
+        ctx.lineTo(
+            25,
+            side * 10
+        );
+
+
+        ctx.closePath();
+
+
+        ctx.fill();
+
+        ctx.stroke();
+
+
+        for (
+            let i = 0;
+            i < 4;
+            i++
+        ) {
+
+            ctx.beginPath();
+
+
+            ctx.moveTo(
+                5,
+                side * (i * 8)
+            );
+
+
+            ctx.lineTo(
+                70,
+                side * (35 + i * 15)
+            );
+
+
+            ctx.stroke();
+        }
+    }
+
+
+    ctx.restore();
+}
+
+
+/* =========================
+   CABEÇA
+========================= */
+
+function drawHead() {
+
+    const head =
+        body[0];
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        head.x,
+        head.y
+    );
+
+
+    ctx.rotate(
+        head.angle
+    );
+
+
+    ctx.shadowBlur =
+        20;
+
+
+    ctx.shadowColor =
+        "#00f5ff";
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        30,
+        0
+    );
+
+
+    ctx.lineTo(
+        5,
+        -18
+    );
+
+
+    ctx.lineTo(
+        -25,
+        -12
+    );
+
+
+    ctx.lineTo(
+        -28,
+        0
+    );
+
+
+    ctx.lineTo(
+        -25,
+        12
+    );
+
+
+    ctx.lineTo(
+        5,
+        18
+    );
+
+
+    ctx.closePath();
+
+
+    ctx.fillStyle =
+        "#06131c";
+
+
+    ctx.fill();
+
+
+    ctx.strokeStyle =
+        "#00f5ff";
+
+
+    ctx.lineWidth = 2;
+
+
+    ctx.stroke();
+
+
+    /* OLHO */
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+        8,
+        -7,
+        4,
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.fill();
+
+
+    /* CHIFRE */
+
+    ctx.strokeStyle =
+        "#8b5cf6";
+
+
+    ctx.lineWidth = 3;
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        -5,
+        -10
+    );
+
+
+    ctx.lineTo(
+        -20,
+        -35
+    );
+
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        -15,
+        8
+    );
+
+
+    ctx.lineTo(
+        -30,
+        28
+    );
+
+
+    ctx.stroke();
+
+
+    ctx.restore();
+}
+
+
+/* =========================
+   CAUDA
+========================= */
+
+function drawTail() {
+
+    const tail =
+        body[
+            body.length - 1
+        ];
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        tail.x,
+        tail.y
+    );
+
+
+    ctx.rotate(
+        tail.angle
+    );
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        0,
+        0
+    );
+
+
+    ctx.lineTo(
+        -50,
+        -18
+    );
+
+
+    ctx.lineTo(
+        -75,
+        0
+    );
+
+
+    ctx.lineTo(
+        -50,
+        18
+    );
+
+
+    ctx.closePath();
+
+
+    ctx.fillStyle =
+        "#06131c";
+
+
+    ctx.fill();
+
+
+    ctx.strokeStyle =
+        "#00f5ff";
+
+
+    ctx.stroke();
+
+
+    ctx.restore();
+}
+
+
+/* =========================
+   ANIMAÇÃO
+========================= */
+
+function animateDragon() {
+
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    updateDragon();
+
+
+    drawWing(17);
+    drawWing(25);
+
+    drawDragonBody();
+
+    drawTail();
+
+    drawHead();
+
+
+    requestAnimationFrame(
+        animateDragon
+    );
+}
+
+
+animateDragon();
+
+
+/* =====================================================
+   TRANSIÇÃO PARA LOGIN
+===================================================== */
+
+const intro =
+    document.getElementById(
+        "intro"
+    );
+
+const login =
+    document.getElementById(
+        "login"
+    );
+
+const flash =
+    document.getElementById(
+        "flash"
+    );
+
+const enterButton =
+    document.getElementById(
+        "enterButton"
+    );
+
+const backButton =
+    document.getElementById(
+        "backButton"
+    );
+
+
+let transitioning =
+    false;
+
+
+enterButton.addEventListener(
+    "click",
+    function () {
+
+        if (transitioning) {
+            return;
+        }
+
+
+        transitioning =
+            true;
+
+
+        /* ESCONDE INTRO */
+
+        intro.classList.add(
+            "hidden"
+        );
+
+
+        /* REINICIA FLASH */
+
+        flash.classList.remove(
+            "active"
+        );
+
+
+        void flash.offsetWidth;
+
+
+        flash.classList.add(
+            "active"
+        );
+
+
+        /* DRAGÃO ATRAVESSA */
+
+        dragonCanvas.style.transition =
+            "transform 1.8s cubic-bezier(.15,.8,.2,1), opacity 1s ease, filter 1s ease";
+
+
+        dragonCanvas.style.transform =
+            "translate(120vw, -15vh) scale(1.4) rotate(-8deg)";
+
+
+        dragonCanvas.style.filter =
+            "brightness(2) drop-shadow(0 0 35px #00f5ff)";
+
+
+        /* MOSTRA LOGIN */
+
+        setTimeout(
+            function () {
+
+                login.classList.add(
+                    "active"
+                );
+
+            },
+            800
+        );
+
+
+        /* ESCONDE DRAGÃO */
+
+        setTimeout(
+            function () {
+
+                dragonCanvas.style.opacity =
+                    "0";
+
+            },
+            1500
+        );
+    }
+);
+
+
+/* =====================================================
+   VOLTAR PARA DRAGÃO
+===================================================== */
+
+backButton.addEventListener(
+    "click",
+    function () {
+
+        login.classList.remove(
+            "active"
+        );
+
+
+        setTimeout(
+            function () {
+
+                dragonCanvas.style.transition =
+                    "none";
+
+
+                dragonCanvas.style.opacity =
+                    "1";
+
+
+                dragonCanvas.style.transform =
+                    "translate(0, 0) scale(1) rotate(0deg)";
+
+
+                dragonCanvas.style.filter =
+                    "none";
+
+
+                void dragonCanvas.offsetWidth;
+
+
+                dragonCanvas.style.transition =
+                    "transform 1.8s cubic-bezier(.15,.8,.2,1), opacity 1s ease";
+
+
+                intro.classList.remove(
+                    "hidden"
+                );
+
+
+                transitioning =
+                    false;
+
+            },
+            500
+        );
+    }
+);
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+const loginForm =
+    document.getElementById(
+        "loginForm"
+    );
+
+
+loginForm.addEventListener(
+    "submit",
+    function (event) {
+
+        event.preventDefault();
+
+
+        const username =
+            document.getElementById(
+                "username"
+            ).value.trim();
+
+
+        const password =
+            document.getElementById(
+                "password"
+            ).value.trim();
+
+
+        if (
+            !username ||
+            !password
+        ) {
+
+            alert(
+                "Preencha usuário e senha."
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Login demonstrativo realizado!"
+        );
+    }
+);
+
+</script>
+
+</body>
+</html>

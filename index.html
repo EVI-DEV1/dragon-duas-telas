@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="launcher-page">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRAGON // painel de travessia</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="launcher">
+
+<div class="launcher-card">
+
+    <h1>Dragon &middot; travessia de duas telas</h1>
+
+    <p>
+        Um dragao, um mundo, duas janelas. Abra as duas telas por aqui:
+        cada janela recebe um recorte do mesmo espaco virtual, e a borda
+        fisica entre os seus monitores vira a costura desse mundo.
+    </p>
+
+    <!-- ============ O BOTAO UNICO ============ -->
+
+    <div class="hero">
+        <button class="btn big" id="autoStart">Comecar a experiencia</button>
+        <div class="meta" id="autoStatus">
+            Um clique: abre as duas telas nos monitores certos,
+            calibra pelas dimensoes reais e lanca a travessia.
+        </div>
+    </div>
+
+    <div class="warn">
+        <strong>Autorize duas coisas quando o Chrome pedir:</strong>
+        os <em>pop-ups</em> (as duas telas sao janelas) e o
+        <em>gerenciamento de janelas</em> (e' o que permite colocar cada
+        uma no seu monitor). Se recusar, tudo continua funcionando —
+        so' vai precisar arrastar as janelas na mao.
+    </div>
+
+
+    <!-- ============ ESTADO DAS DUAS TELAS ============ -->
+
+    <div class="grid">
+
+        <div class="slot">
+            <h3>Tela 1 &middot; Monitor</h3>
+            <div class="meta log" id="monitorStatus">fechada</div>
+            <button class="btn ghost" id="openMonitor">Abrir monitor</button>
+        </div>
+
+        <div class="slot">
+            <h3>Tela 2 &middot; Notebook</h3>
+            <div class="meta log" id="notebookStatus">fechada</div>
+            <button class="btn ghost" id="openNotebook">Abrir notebook</button>
+        </div>
+
+        <div class="slot">
+            <h3>Monitores detectados</h3>
+            <div class="meta log" id="screensInfo">detectando...</div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <button class="btn ghost" id="openBoth">Abrir as duas telas</button>
+        <button class="btn ghost" id="autoCalibrate">Calibrar automaticamente</button>
+        <button class="btn ghost" id="swapSides">Inverter os lados</button>
+    </div>
+
+    <div class="meta log" id="calibResult" style="margin-top:16px"></div>
+
+
+    <!-- ============ CALIBRACAO / CONFIG ============ -->
+
+    <div class="steps">
+
+        <h3>Configuracao das telas</h3>
+
+        <div class="meta" id="sidesLabel" style="margin-bottom:16px"></div>
+
+        <div class="grid">
+
+            <div class="slot">
+                <h3>Diferenca de resolucao</h3>
+                <select id="cfgScaleMode">
+                    <option value="height">height &middot; mesma fracao da altura</option>
+                    <option value="auto">auto &middot; densidade de pixels</option>
+                    <option value="manual">manual &middot; so' a calibracao</option>
+                </select>
+                <div class="hint">
+                    "height" e' o padrao: o dragao ocupa a mesma
+                    proporcao da tela em 1080p e em 768p.
+                </div>
+            </div>
+
+            <div class="slot">
+                <h3>Duracao da aceleracao (ms)</h3>
+                <select id="cfgDuration">
+                    <option value="700">700</option>
+                    <option value="1200">1200</option>
+                    <option value="1800">1800</option>
+                    <option value="2600">2600</option>
+                </select>
+            </div>
+
+            <div class="slot">
+                <h3>Escala do dragao</h3>
+                <select id="cfgScale">
+                    <option value="0.7">0.7</option>
+                    <option value="0.85">0.85</option>
+                    <option value="1">1</option>
+                    <option value="1.2">1.2</option>
+                    <option value="1.5">1.5</option>
+                </select>
+            </div>
+
+            <div class="slot">
+                <h3>Velocidade (vpx/s)</h3>
+                <select id="cfgSpeed">
+                    <option value="480">480 &middot; contemplativo</option>
+                    <option value="760">760 &middot; padrao</option>
+                    <option value="1100">1100 &middot; agressivo</option>
+                </select>
+            </div>
+
+            <div class="slot">
+                <h3>Quando avisar a outra tela</h3>
+                <select id="cfgExit">
+                    <option value="head">head &middot; ao cruzar a borda</option>
+                    <option value="full">full &middot; so' apos sair inteiro</option>
+                </select>
+                <div class="hint">
+                    "head" e' o que gera a continuidade real:
+                    a cabeca ja&nbsp;esta no notebook enquanto a
+                    cauda ainda aparece no monitor.
+                </div>
+            </div>
+
+            <div class="slot">
+                <h3>Canal</h3>
+                <div class="meta" id="transport">-</div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ============ INSTRUCOES ============ -->
+
+    <div class="steps">
+
+        <h3>Se preferir no passo a passo</h3>
+
+        <ol>
+            <li><strong>Comecar a experiencia</strong> faz tudo isto sozinho.
+                Os passos abaixo sao para quando voce quiser controlar cada etapa.</li>
+            <li>Clique em <strong>Abrir as duas telas</strong> e autorize
+                o gerenciamento de janelas quando o Chrome perguntar.</li>
+            <li>Confira: o monitor deve estar a <strong>direita</strong>,
+                o notebook a <strong>esquerda</strong>. Se abriu trocado,
+                arraste as janelas e use <strong>Inverter os lados</strong>.</li>
+            <li>Em cada janela, tecle <code>F</code> para tela cheia.</li>
+            <li>Volte aqui e clique em <strong>Calibrar automaticamente</strong>.</li>
+            <li>Refine: tecle <code>C</code> nas duas janelas. As linhas
+                horizontais precisam formar uma linha unica atravessando a
+                moldura fisica; os tracos de 100&nbsp;vpx precisam ter o mesmo
+                tamanho nas duas telas.</li>
+            <li>No monitor, clique em <strong>ENTRAR</strong> (ou tecle
+                <code>T</code>) e acompanhe a passagem pela moldura.</li>
+            <li>Na tela de chegada, use <strong>Devolver ao monitor</strong>
+                para atravessar no sentido contrario.</li>
+        </ol>
+    </div>
+
+</div>
+
+
+<script src="js/config.js"></script>
+<script src="js/bridge.js"></script>
+<script src="js/launcher.js"></script>
+
+<script>
+    Launcher.start();
+</script>
+
+</body>
+</html>
