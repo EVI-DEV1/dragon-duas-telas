@@ -4,6 +4,21 @@ Um dragão que atravessa fisicamente do monitor da direita para o notebook da
 esquerda. Não é transição de página, não é redirect, não é um segundo dragão
 desenhado do outro lado.
 
+![O dragão atravessando a moldura entre dois monitores](docs/travessia.gif)
+
+> As duas telas lado a lado, com a moldura física no meio. Um clique no
+> notebook chama o dragão; um clique no monitor traz ele de volta.
+
+O quadro que resume o projeto — a cabeça já está no notebook enquanto a cauda
+ainda está no monitor, e as duas telas estão desenhando **a mesma criatura**:
+
+![Corpo atravessando: cabeça em uma tela, cauda na outra](docs/atravessando.png)
+
+<sup>O GIF é renderizado pelo próprio código do projeto (`demo/gerar-demo.js`
+carrega `world.js`, `dragon.js`, `dragon-render.js` e `fx.js` e desenha os dois
+recortes lado a lado). Não é uma animação feita à parte — mas também não é uma
+filmagem: para ver nos seus monitores de verdade, rode o projeto.</sup>
+
 ---
 
 ## A ideia central
@@ -82,6 +97,11 @@ dragão/
 │
 ├── server.js                  servidor local (Node, sem dependências)
 ├── start.bat                  sobe o servidor e abre o navegador
+│
+├── demo/
+│   └── gerar-demo.js          gera o GIF renderizando o código real
+├── docs/                      o GIF e os quadros-chave
+│
 └── legado-single-screen.html  o projeto original preservado
 ```
 
@@ -391,6 +411,24 @@ um `seamGap` maior que meia tela é tratado como leitura errada da geometria e
 zerado. Sem essas travas, um `availTop` errado do Windows deslocava a faixa
 vertical do mundo que a tela enxerga, e o dragão passava **inteiro** fora do
 enquadramento — a tela renderizava normalmente e não aparecia nada.
+
+
+## Regerar o GIF
+
+```bash
+cd demo && npm install && npm run gerar
+```
+
+Sai em `docs/travessia.gif` mais três quadros-chave em PNG. O script carrega os
+módulos do projeto num contexto `vm`, cria **dois** `WorldMap` (um por tela,
+com resoluções diferentes de propósito: 960×540 e 683×384), roda **uma**
+simulação e desenha os dois recortes lado a lado com a moldura no meio.
+
+O quadro da travessia não é escolhido a dedo: o script captura o primeiro em
+que a cabeça já passou de `x = 0` e a cauda ainda não.
+
+Ajuste `ESCALA_SAIDA`, `FPS` e `DURACAO` no topo do arquivo para trocar
+tamanho e peso do GIF.
 
 
 ## Limitações conhecidas

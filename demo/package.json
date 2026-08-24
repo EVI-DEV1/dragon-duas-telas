@@ -1,0 +1,10 @@
+{
+  "name": "dragon-demo",
+  "private": true,
+  "description": "Gera o GIF demonstrativo renderizando o codigo real do dragao",
+  "scripts": { "gerar": "node gerar-demo.js" },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.60",
+    "gifenc": "^1.0.3"
+  }
+}
