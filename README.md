@@ -413,10 +413,26 @@ vertical do mundo que a tela enxerga, e o dragão passava **inteiro** fora do
 enquadramento — a tela renderizava normalmente e não aparecia nada.
 
 
-## Regerar o GIF
+## No ar
+
+**https://dragon-duas-telas.vercel.app**
+
+A raiz traz uma **prévia ao vivo numa tela só** — as duas telas viram dois
+canvas lado a lado com a moldura entre eles, alimentados pela mesma simulação
+e pelo mesmo renderizador das janelas de verdade. Clique nos dois lados. Quem
+tem dois monitores usa o painel logo abaixo para abrir a experiência completa.
+
+O `vercel.json` é obrigatório: sem ele a Vercel enxerga o `server.js` na raiz,
+conclui que é uma aplicação Node e para de servir os arquivos estáticos —
+todas as rotas passam a responder `404 /index.html`, inclusive a raiz.
+
+
+## Regerar o GIF e a capa
 
 ```bash
-cd demo && npm install && npm run gerar
+cd demo && npm install
+npm run gerar        # docs/travessia.gif + os três quadros-chave
+node gerar-capa.js   # docs/capa.png, 1280x800 (capa do portfólio)
 ```
 
 Sai em `docs/travessia.gif` mais três quadros-chave em PNG. O script carrega os
