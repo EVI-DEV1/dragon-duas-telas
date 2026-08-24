@@ -18,6 +18,23 @@
         fisica entre os seus monitores vira a costura desse mundo.
     </p>
 
+    <!-- ============ VITRINE AO VIVO ============
+         Roda numa tela so'. Quem abre o link publicado quase
+         sempre tem um monitor: sem isto, a primeira coisa que
+         a pessoa ve' e' um painel de configuracao.
+    ============================================= -->
+
+    <div class="vitrine" id="vitrine"></div>
+
+    <p class="vitrine-nota">
+        Previa ao vivo, numa tela so&#39;. <strong>Clique em qualquer um dos
+        dois lados</strong> e o dragao vai ate&#39; la&#39;, atravessando a moldura.
+        Nao e&#39; video: e&#39; a mesma simulacao e o mesmo renderizador que as
+        duas janelas usam. Com dois monitores, cada metade vira uma tela
+        de verdade.
+    </p>
+
+
     <!-- ============ O BOTAO UNICO ============ -->
 
     <div class="hero">
@@ -177,9 +194,15 @@
 
 <script src="js/config.js"></script>
 <script src="js/bridge.js"></script>
+<script src="js/world.js"></script>
+<script src="js/dragon.js"></script>
+<script src="js/dragon-render.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/vitrine.js"></script>
 <script src="js/launcher.js"></script>
 
 <script>
+    Vitrine.iniciar(document.getElementById("vitrine"));
     Launcher.start();
 </script>
 

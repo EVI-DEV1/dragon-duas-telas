@@ -505,6 +505,64 @@ body.launcher {
     color: rgba(200, 236, 255, .62);
 }
 
+/* ---------- vitrine ao vivo ---------- */
+
+.vitrine {
+    display: flex;
+    gap: 14px;                       /* = Vitrine.MOLDURA */
+    align-items: center;
+    margin-top: 30px;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.vitrine-tela {
+    position: relative;
+    flex: 0 0 auto;
+    border: 1px solid rgba(0, 245, 255, .16);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--deep, #02030a);
+}
+
+.vitrine-tela canvas {
+    display: block;
+    cursor: crosshair;
+}
+
+.vitrine-marca {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    font-size: 9px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(184, 250, 255, .45);
+    pointer-events: none;
+}
+
+.vitrine-tela.monitor .vitrine-marca {
+    left: auto;
+    right: 10px;
+}
+
+.vitrine-nota {
+    margin-top: 14px;
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: rgba(200, 236, 255, .58);
+}
+
+.vitrine-nota strong { color: var(--cyan); font-weight: 600; }
+
+/* telas estreitas: a previa perde a graca espremida */
+@media (max-width: 620px) {
+    .vitrine { gap: 8px; }
+    .vitrine-marca { display: none; }
+}
+
+
 /* ---------- o botao unico ---------- */
 
 .hero {

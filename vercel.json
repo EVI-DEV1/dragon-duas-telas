@@ -1,23 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-
-  "_comment": [
-    "Site 100% estatico. Sem isto a Vercel enxerga o server.js na raiz,",
-    "conclui que e' uma aplicacao Node e para de servir os arquivos:",
-    "todas as rotas passam a responder 404 /index.html.",
-    "",
-    "framework null = preset 'Other'. outputDirectory '.' = serve a raiz",
-    "do repositorio como esta', sem build."
-  ],
-
   "framework": null,
   "buildCommand": null,
   "installCommand": null,
   "outputDirectory": ".",
-
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
-
   "headers": [
     {
       "source": "/(.*)",
